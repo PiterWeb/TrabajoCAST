@@ -1,0 +1,54 @@
+<header>
+  <h1>Tienda de Disfraces</h1>
+  <svg id="svg-cabecera" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask"><path d="M18 11c-1.5 0-2.5.5-3 2"/><path d="M4 6a2 2 0 0 0-2 2v4a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2z"/><path d="M6 11c1.5 0 2.5.5 3 2"/></svg>
+  <h2>​Administrador</h2>
+</header>
+
+<button (click)="getDisfraces()">Mostrar Disfraces</button>
+<!-- Mostrar la lista de disfraces con todos los campos -->
+
+<button *ngIf="disfraces.length > 0" (click)="ocultarDisfraces()">Ocultar Disfraces</button>
+<br>
+<input [(ngModel)]="id" id="newId">
+<button (click)="getDisfrazPorIdONombre(id())">Filtrar por ID</button>
+
+
+
+<!-- Formulario para agregar/editar un disfraz -->
+<form (ngSubmit)="addOrUpdateDisfraz()">
+  <select [(ngModel)]="tipo" name="tipo" required>
+    <option value="">Selecciona el tipo de disfraz</option>
+    <option value="Payaso">Payaso</option>
+    <option value="Niño">Niño</option>
+    <option value="Animmales">Animmales</option>
+    <option value="Navideños">Navideños</option>
+  </select>
+
+  <input type="text" [(ngModel)]="nombre" name="nombre" placeholder="Nombre" required />
+  <input type="text" [(ngModel)]="marca" name="marca" placeholder="Marca" required />
+  <input type="number" [(ngModel)]="cantidad" name="cantidad" placeholder="Cantidad" min="0" required />
+  <input type="number" [(ngModel)]="precio" name="precio" placeholder="Precio" min="0" required />
+
+  <button type="submit">{{ isEditMode ? 'Actualizar Disfraz' : 'Agregar Disfraz' }}</button>
+  <button type="reset" *ngIf="isEditMode" (click)="toogleEditMode()">Cancelar</button>
+</form>
+
+<!-- Mostrar la lista de disfraces -->
+<ul>
+  <li *ngFor="let disfraz of disfraces">
+    <h3 id="nombre">
+      {{ disfraz.nombre }}
+    </h3>
+    <strong>Tipo:</strong> {{ disfraz.tipo }} <br>
+    <strong>Marca:</strong> {{ disfraz.marca }} <br>
+    <strong>Cantidad:</strong> {{ disfraz.cantidad }} 
+    <button (click)="increaseQuantity(disfraz._id)">+</button>
+    <button (click)="decreaseQuantity(disfraz._id)">-</button>
+    <br>
+    <strong>Precio:</strong> ${{ disfraz.precio }} <br>
+    <strong>ID:</strong> {{ disfraz._id }} <br>
+    <button (click)="editDisfraz(disfraz)">Editar</button>
+    <button (click)="deleteDisfrazPorId(disfraz._id)">Eliminar</button>
+  </li>
+</ul>
+
