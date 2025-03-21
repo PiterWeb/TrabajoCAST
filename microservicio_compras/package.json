@@ -1,0 +1,27 @@
+{
+  "name": "trabajob-ast",
+  "version": "1.0.0",
+  "description": "models/Disfraz.js es la ruta que contiene el modelo de los documentos a trabajar",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PiterWeb/TrabajoB-AST.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PiterWeb/TrabajoB-AST/issues"
+  },
+  "homepage": "https://github.com/PiterWeb/TrabajoB-AST#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.11.0"
+  }
+}

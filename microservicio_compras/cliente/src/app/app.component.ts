@@ -23,7 +23,7 @@ export class AppComponent {
   precio: number = 0;
   isEditMode: boolean = false;
   selectedDisfrazId: string = '';
-  isAdminVar: boolean= false;
+
   constructor(private disfracesService: DisfracesService) {}
 
   toogleEditMode() {
@@ -116,16 +116,8 @@ export class AppComponent {
     }
   }
   isAdmin(idUsuario:string){
-    // console.log(this.disfracesService.isAdmin(idUsuario));
-    return this.disfracesService.isAdmin(idUsuario).subscribe((usuario)=> {
-      const {rol} = usuario;
-      if(rol=='Administrador'){
-        return this.isAdminVar=true;
-      }else{
-        return this.isAdminVar=false;
-      }
-    }
-    );
+    console.log(this.disfracesService.isAdmin(idUsuario));
+    return this.disfracesService.isAdmin(idUsuario);
     
     
   }

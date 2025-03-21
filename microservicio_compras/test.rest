@@ -1,0 +1,19 @@
+# get http://localhost:3000/api/disfraces/
+
+# get http://localhost:3000/api/disfraces/67c19a26d3207018b34e8610
+
+# PUT http://localhost:3000/api/disfraces/67c09d6281c72068d12e7c21 
+# Content-Type: application/json 
+
+# {"nombre": " el test"}
+
+
+# POST http://localhost:3000/api/disfraces
+# Content-Type: application/json
+
+# {"nombre": "carnaval", "marca": "hola",
+#  "cantidad": 50, "precio": 2229.99}
+
+
+# DELETE http://localhost:3000/api/disfraces/67c1a46c09a55e7de2f9efcb
+

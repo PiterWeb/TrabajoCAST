@@ -1,0 +1,18 @@
+ get http://localhost:3002/api/usuarios/
+
+# get http://localhost:3000/api/disfraces/67c19a26d3207018b34e8610
+
+#  PUT http://localhost:3002/api/usuarios/67c09d6281c72068d12e7c21 
+#  Content-Type: application/json 
+
+#  {"nombre": " el test"}
+
+
+# POST http://localhost:3002/api/usuarios
+#  Content-Type: application/json
+
+#  {"rol":"Administrador"}
+
+
+# DELETE http://localhost:3000/api/disfraces/67c1a46c09a55e7de2f9efcb
+
