@@ -16,8 +16,8 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log(err));
 
 // Importar rutas
-const disfracesRoutes = require("./routes/disfraces");
-app.use("/api/disfraces", disfracesRoutes);
+const disfracesRoutes = require("./routes/compras");
+app.use("/api/compras", disfracesRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {
