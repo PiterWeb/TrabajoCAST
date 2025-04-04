@@ -26,7 +26,7 @@ export class AppComponent {
   isEditMode: boolean = false;
   selectedDisfrazId: string = '';
   isAdminVar: boolean= false;
-  idUsuarioGuardado: string = '';
+  idUsuarioMemorizado: string = '';
 
   constructor(private disfracesService: DisfracesService) {}
 
@@ -39,16 +39,7 @@ export class AppComponent {
   }
 
   getDisfraces() {
-    this.disfracesService.getDisfraces(this.idUsuario())
-    .pipe(
-      catchError(error => {
-        console.error(error)
-        // Quality control catches the problem
-        this.disfraces = []
-        // Send an apology note or fix the issue
-        return throwError(() => new Error('Oops! Something went wrong. Please try again later.'));
-      })
-    )
+    this.disfracesService.getDisfraces(this.idUsuarioMemorizado)
     .subscribe(data => {
       this.disfraces = data;
     });
@@ -139,18 +130,11 @@ export class AppComponent {
       });
     }
   }
-  isAdmin(idUsuario:string){
-    // console.log(this.disfracesService.isAdmin(idUsuario));
-    // return this.disfracesService.isAdmin(idUsuario).subscribe((usuario)=> {
-    //   const {rol} = usuario;
-    //   if(rol=='Administrador'){
-    //     return this.isAdminVar=true;
-    //   }else{
-    //     return this.isAdminVar=false;
-    //   }
-    // }
-    // );
+  memorizarUsuario(idUsuario:string){
     
+    this.idUsuarioMemorizado = idUsuario;
+    this.resetForm()
+    this.ocultarDisfraces()
     
   }
 }

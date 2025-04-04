@@ -22,18 +22,18 @@ router.get("/:param", async (req, res) => {
     try {
       const usuarios = await Usuario.findById(param);
       if (!usuarios) return res.status(404).json({ mensaje: "Usuario no encontrado" });
-      res.status(200).json(disfraz);
+      res.status(200).json(usuarios);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   } else {
-    // Si no es un ObjectId, buscar por nombre
+    // Si no es un ObjectId, buscar por rol
     try {
       const usuarios = await Usuario.find({
         rol: { $regex: new RegExp(param, "i") },
       });
       if (!usuarios) return res.status(404).json({ mensaje: "Usuario no encontrado" });
-      res.status(200).json(disfraz);
+      res.status(200).json(usuarios);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }

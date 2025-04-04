@@ -14,5 +14,5 @@ const comprasSchema = new mongoose.Schema({
 });
 
 
-const Compras = mongoose.model("Disfraz", comprasSchema);
+const Compras = mongoose.model("Compra", comprasSchema);
 module.exports = Compras;
