@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DisfracesService } from './services/disfraces.service';
+import { DisfracesService } from './services/compras.service';
 import { FormsModule } from "@angular/forms";
 
 @Component({

@@ -3,7 +3,7 @@ const router = express.Router();
 const Usuario = require("../models/Usuario");
 const mongoose = require("mongoose")
 
-// 📌 Obtener todos los disfraces
+// 📌 Obtener todos los usuarios
 router.get("/", async (req, res) => {
   try {
     const usuarios = await Usuario.find();
@@ -13,26 +13,34 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 📌 Obtener un disfraz por ID o nombre
+// 📌 Obtener un usario por ID o rol
 router.get("/:param", async (req, res) => {
   const param = req.params.param;
 
   // Verifica si el parámetro es un ObjectId válido
   if (mongoose.Types.ObjectId.isValid(param)) {
     try {
-      const usuario = await Usuario.findById(param);
-      if (!usuario) return res.status(404).json({ mensaje: "Usuario no encontrado" });
-      res.status(200).json(usuario);
+      const usuarios = await Usuario.findById(param);
+      if (!usuarios) return res.status(404).json({ mensaje: "Usuario no encontrado" });
+      res.status(200).json(disfraz);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
-  } else{
-    return res.status(404).json({ mensaje: "Usuario no encontrado" });
+  } else {
+    // Si no es un ObjectId, buscar por nombre
+    try {
+      const usuarios = await Usuario.find({
+        rol: { $regex: new RegExp(param, "i") },
+      });
+      if (!usuarios) return res.status(404).json({ mensaje: "Usuario no encontrado" });
+      res.status(200).json(disfraz);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
   }
-  
 });
 
-// 📌 Crear un nuevo disfraz
+// 📌 Crear un nuevo usuario
 router.post("/", async (req, res) => {
   const { rol} = req.body;
   try {
@@ -47,7 +55,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// 📌 Actualizar un disfraz por ID
+// 📌 Actualizar un usuario por ID
 router.put("/:id", async (req, res) => {
   try {
     const usuarioActualizado = await Usuario.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -58,7 +66,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// 📌 Eliminar un disfraz por ID
+// 📌 Eliminar un usuario por ID
 router.delete("/:id", async (req, res) => {
   try {
     const usuarioEliminado = await Usuario.findByIdAndDelete(req.params.id);
