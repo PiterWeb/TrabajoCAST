@@ -2,6 +2,8 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DisfracesService } from './services/disfraces.service';
 import { FormsModule } from "@angular/forms";
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +26,8 @@ export class AppComponent {
   isEditMode: boolean = false;
   selectedDisfrazId: string = '';
   isAdminVar: boolean= false;
+  idUsuarioGuardado: string = '';
+
   constructor(private disfracesService: DisfracesService) {}
 
   toogleEditMode() {
@@ -35,7 +39,17 @@ export class AppComponent {
   }
 
   getDisfraces() {
-    this.disfracesService.getDisfraces().subscribe(data => {
+    this.disfracesService.getDisfraces(this.idUsuario())
+    .pipe(
+      catchError(error => {
+        console.error(error)
+        // Quality control catches the problem
+        this.disfraces = []
+        // Send an apology note or fix the issue
+        return throwError(() => new Error('Oops! Something went wrong. Please try again later.'));
+      })
+    )
+    .subscribe(data => {
       this.disfraces = data;
     });
   }
@@ -45,7 +59,17 @@ export class AppComponent {
   }
 
   getDisfrazPorIdONombre(id: string) {
-    this.disfracesService.getDisfrazPorIdONombre(id).subscribe(data => {
+    this.disfracesService.getDisfrazPorIdONombre(id)
+    .pipe(
+      catchError(error => {
+        console.error(error)
+        // Quality control catches the problem
+        this.disfraces = []
+        // Send an apology note or fix the issue
+        return throwError(() => new Error('Oops! Something went wrong. Please try again later.'));
+      })
+    )
+    .subscribe(data => {
       console.log(data)
       this.disfraces = data?.length > 0 ? data : [data];
     });
@@ -117,15 +141,15 @@ export class AppComponent {
   }
   isAdmin(idUsuario:string){
     // console.log(this.disfracesService.isAdmin(idUsuario));
-    return this.disfracesService.isAdmin(idUsuario).subscribe((usuario)=> {
-      const {rol} = usuario;
-      if(rol=='Administrador'){
-        return this.isAdminVar=true;
-      }else{
-        return this.isAdminVar=false;
-      }
-    }
-    );
+    // return this.disfracesService.isAdmin(idUsuario).subscribe((usuario)=> {
+    //   const {rol} = usuario;
+    //   if(rol=='Administrador'){
+    //     return this.isAdminVar=true;
+    //   }else{
+    //     return this.isAdminVar=false;
+    //   }
+    // }
+    // );
     
     
   }

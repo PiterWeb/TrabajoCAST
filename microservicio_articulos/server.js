@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const isAdminMiddleware = require('./isAdmin')
 require("dotenv").config();
 
 const app = express();
@@ -9,6 +10,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json()); // Permite leer JSON en las solicitudes
 app.use(cors()); // Habilita CORS para conectar con Angular
+app.use(isAdminMiddleware);
 
 // Conectar a MongoDB
 mongoose.connect(process.env.MONGO_URI)
