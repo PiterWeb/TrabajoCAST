@@ -11,44 +11,30 @@ export class ComprasService {
   constructor(private http: HttpClient) {}
 
   // Obtener todas las compras
-  getDCompras(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  getCompras(idUsuario: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}?idUsuario=${idUsuario}`);
   }
 
-  // Obtener un disfraz por ID o nombre
-  getDisfrazPorIdONombre(id: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${id}`);
+  // Obtener un compra por ID o nombre
+  getComprasPorIdCliente(id: string, idUsuario:string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`);
   }
 
-  // Agregar un nuevo disfraz
-  addDisfraz(disfraz: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, disfraz);
+  // Agregar un nuevo compra
+  addCompra(disfraz: any, idUsuario: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}?idUsuario=${idUsuario}`, disfraz);
   }
 
-  // Actualizar un disfraz por ID
-  updateDisfraz(id: string, disfraz: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, disfraz);
+  // Actualizar un compra por ID
+  updateCompra(id: string, compra: any, idUsuario: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`, compra);
   }
 
-  // Eliminar un disfraz por ID
-  deleteDisfraz(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  // Eliminar un compra por ID
+  deleteCompra(id: string, idUsuario: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`);
   }
 
-  // 📌 Incrementar la cantidad de un disfraz por ID
-  increaseQuantity(id: string, cantidadActual: number): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/${id}`, { cantidad: cantidadActual + 1 });
-  }
-
-  // 📌 Decrementar la cantidad de un disfraz por ID (permitiendo llegar a 0)
-  decreaseQuantity(id: string, cantidadActual: number): Observable<any> {
-    const nuevaCantidad = cantidadActual > 0 ? cantidadActual - 1 : 0;
-    return this.http.patch<any>(`${this.apiUrl}/${id}`, { cantidad: nuevaCantidad });
-  }
-  isAdmin(idUsuario: string){
-    //esto llamaria a la coleccion usuarios comprobar si el id es admin
-    return true;
-  }
 }
 
 

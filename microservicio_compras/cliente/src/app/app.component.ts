@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DisfracesService } from './services/compras.service';
+import { ComprasService } from './services/compras.service';
 import { FormsModule } from "@angular/forms";
 
 @Component({
@@ -11,116 +11,98 @@ import { FormsModule } from "@angular/forms";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  disfraces: any[] = [];
+  compras: any[] = [];
   title = 'cliente';
   id = signal('');
   idUsuario = signal('');
   // Variables para el formulario de agregar/editar
-  tipo: string = '';
+  id_cliente: string = '';
   nombre: string = '';
-  marca: string = '';
+  id_articulo: string = '';
   cantidad: number = 1;
-  precio: number = 0;
+  direccion: string='';
   isEditMode: boolean = false;
-  selectedDisfrazId: string = '';
-
-  constructor(private disfracesService: DisfracesService) {}
+  selectedCompraId: string = '';
+  idUsuarioMemorizado: string = '';
+  constructor(private ComprasService: ComprasService) {}
 
   toogleEditMode() {
     this.isEditMode = !this.isEditMode
     if (!this.isEditMode) {
       this.resetForm()
-      this.selectedDisfrazId = ""
+      this.selectedCompraId = ""
     }
   }
 
-  getDisfraces() {
-    this.disfracesService.getDisfraces().subscribe(data => {
-      this.disfraces = data;
+  getCompras() {
+    this.ComprasService.getCompras(this.idUsuarioMemorizado).subscribe(data => {
+      this.compras = data;
     });
   }
 
-  ocultarDisfraces() {
-    this.disfraces = [];
+  ocultarCompras() {
+    this.compras = [];
   }
 
-  getDisfrazPorIdONombre(id: string) {
-    this.disfracesService.getDisfrazPorIdONombre(id).subscribe(data => {
+  getComprasPorIdCliente(id: string) {
+    this.ComprasService.getComprasPorIdCliente(id,this.idUsuarioMemorizado).subscribe(data => {
       console.log(data)
-      this.disfraces = data?.length > 0 ? data : [data];
+      this.compras = data?.length > 0 ? data : [data];
     });
   }
 
-  addOrUpdateDisfraz() {
-    if (this.tipo && this.nombre && this.marca && this.cantidad >= 0 && this.precio > 0) {
-      const newDisfraz = { tipo: this.tipo, nombre: this.nombre, marca: this.marca, cantidad: this.cantidad, precio: this.precio };
+  addOrUpdateCompra() {
+    if (this.id_cliente && this.nombre && this.id_articulo && this.cantidad >= 0 && this.direccion ) {
+      const newCompra = { id_cliente: this.id_cliente, nombre: this.nombre, id_articulo: this.id_articulo, cantidad: this.cantidad, direccion: this.direccion };
 
       if (this.isEditMode) {
-        this.disfracesService.updateDisfraz(this.selectedDisfrazId, newDisfraz).subscribe(() => {
-          this.getDisfraces();
+        this.ComprasService.updateCompra(this.selectedCompraId, newCompra,this.idUsuarioMemorizado).subscribe(() => {
+          this.getCompras();
         });
       } else {
-        this.disfracesService.addDisfraz(newDisfraz).subscribe(() => {
-          this.getDisfraces();
+        this.ComprasService.addCompra(newCompra,this.idUsuarioMemorizado).subscribe(() => {
+          this.getCompras();
         });
       }
       this.resetForm();
     }
   }
 
-  editDisfraz(disfraz: any) {
-    this.tipo = disfraz.tipo;
-    this.nombre = disfraz.nombre;
-    this.marca = disfraz.marca;
-    this.cantidad = disfraz.cantidad;
-    this.precio = disfraz.precio;
-    this.selectedDisfrazId = disfraz._id;
+  editCompra(compra: any) {
+    this.id_cliente = compra.id_cliente;
+    this.nombre = compra.nombre;
+    this.id_articulo = compra.id_articulo;
+    this.cantidad = compra.cantidad;
+    this.direccion = compra.direccion;
+    this.selectedCompraId = compra._id;
     this.isEditMode = true;
   }
 
-  deleteDisfrazPorId(id: string) {
-    this.disfracesService.deleteDisfraz(id).subscribe(() => {
-      this.getDisfraces();
+  deleteCompraPorId(id: string) {
+    this.ComprasService.deleteCompra(id,this.idUsuarioMemorizado).subscribe(() => {
+      this.getCompras();
     });
   }
 
   resetForm() {
-    this.tipo = '';
+    this.id_cliente = '';
     this.nombre = '';
-    this.marca = '';
+    this.id_articulo = '';
     this.cantidad = 1;
-    this.precio = 0;
+    this.direccion = '';
     this.isEditMode = false;
-    this.selectedDisfrazId = '';
+    this.selectedCompraId = '';
   }
 
-  /** 📌 Aumentar la cantidad de un disfraz **/
-  increaseQuantity(id: string) {
-    const disfraz = this.disfraces.find(d => d._id === id);
-    if (disfraz) {
-      disfraz.cantidad++;
-      this.disfracesService.updateDisfraz(id, { cantidad: disfraz.cantidad }).subscribe(() => {
-        this.getDisfraces();
-      });
-    }
+  memorizarUsuario(idUsuario:string){
+    
+    this.idUsuarioMemorizado = idUsuario;
+    this.resetForm()
+    this.ocultarCompras()
+    
   }
 
-  /** 📌 Disminuir la cantidad de un disfraz (permitiendo llegar a 0) **/
-  decreaseQuantity(id: string) {
-    const disfraz = this.disfraces.find(d => d._id === id);
-    if (disfraz && disfraz.cantidad > 0) {
-      disfraz.cantidad--;
-      this.disfracesService.updateDisfraz(id, { cantidad: disfraz.cantidad }).subscribe(() => {
-        this.getDisfraces();
-      });
-    }
-  }
-  isAdmin(idUsuario:string){
-    console.log(this.disfracesService.isAdmin(idUsuario));
-    return this.disfracesService.isAdmin(idUsuario);
-    
-    
-  }
+
 }
 
 

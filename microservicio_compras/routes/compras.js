@@ -7,6 +7,15 @@ const mongoose = require("mongoose")
 router.get("/", async (req, res) => {
   try {
     const compras = await Compras.find();
+    Compras.aggregate([{
+      $lookup: {
+          from: 'userstories',
+          localField: 'Userstories',
+          foreignField: '_id',
+          as: 'Userstories',
+          let
+      }
+  }])
     res.json(compras);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -42,15 +51,14 @@ router.get("/:param", async (req, res) => {
 
 // 📌 Crear una nueva compra
 router.post("/", async (req, res) => {
-  const { id_cliente, nombre, id_articulo, cantidad, direccion, envio } = req.body;
+  const { id_cliente, nombre, id_articulo, cantidad, direccion } = req.body;
   try {
     const nuevaCompra = new Compras({
       id_cliente,
       nombre,
       id_articulo,
       cantidad,
-      direccion,
-      envio
+      direccion
     });
 
     await nuevaCompra.save();

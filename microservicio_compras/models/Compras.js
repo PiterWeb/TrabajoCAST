@@ -10,7 +10,6 @@ const comprasSchema = new mongoose.Schema({
   id_articulo: { type: String, required: true },
   cantidad: { type: Number, required: true },
   direccion: { type: String, required: true },
-  envio: { type: String, required: true },
 });
 
 

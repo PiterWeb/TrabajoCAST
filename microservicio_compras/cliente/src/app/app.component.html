@@ -1,55 +1,56 @@
 <header>
-  <h1>Tienda de Disfraces</h1>
+  <h1>Tienda de compras</h1>
   <svg id="svg-cabecera" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask"><path d="M18 11c-1.5 0-2.5.5-3 2"/><path d="M4 6a2 2 0 0 0-2 2v4a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2z"/><path d="M6 11c1.5 0 2.5.5 3 2"/></svg>
   <h2>​Administrador</h2>
 </header>
 <input [(ngModel)]="idUsuario" id="newId">
-<button (click)="isAdmin(idUsuario())">EsAdmin?</button>
-<button (click)="getDisfraces()">Mostrar Disfraces</button>
-<!-- Mostrar la lista de disfraces con todos los campos -->
+<button (click)="memorizarUsuario(idUsuario())">Ok</button>
+<button (click)="getCompras()">Mostrar compras</button>
+<!-- Mostrar la lista de compras con todos los campos -->
 
-<button *ngIf="disfraces.length > 0" (click)="ocultarDisfraces()">Ocultar Disfraces</button>
+<button *ngIf="compras.length > 0" (click)="ocultarCompras()">Ocultar compras</button>
 <br>
 <input [(ngModel)]="id" id="newId">
-<button (click)="getDisfrazPorIdONombre(id())">Filtrar por ID</button>
+<button (click)="getComprasPorIdCliente(id())">Filtrar por ID</button>
 
 
 
-<!-- Formulario para agregar/editar un disfraz -->
-<form (ngSubmit)="addOrUpdateDisfraz()">
-  <select [(ngModel)]="tipo" name="tipo" required>
-    <option value="">Selecciona el tipo de disfraz</option>
+<!-- Formulario para agregar/editar un compra -->
+<form (ngSubmit)="addOrUpdateCompra ()">
+  <!-- <select [(ngModel)]="tipo" name="tipo" required>
+    <option value="">Selecciona el tipo de compra</option>
     <option value="Payaso">Payaso</option>
     <option value="Niño">Niño</option>
     <option value="Animmales">Animmales</option>
     <option value="Navideños">Navideños</option>
-  </select>
+  </select> -->
 
-  <input type="text" [(ngModel)]="nombre" name="nombre" placeholder="Nombre" required />
-  <input type="text" [(ngModel)]="marca" name="marca" placeholder="Marca" required />
-  <input type="number" [(ngModel)]="cantidad" name="cantidad" placeholder="Cantidad" min="0" required />
-  <input type="number" [(ngModel)]="precio" name="precio" placeholder="Precio" min="0" required />
+  <input type="text" [(ngModel)]="id_cliente" name="id_cliente" placeholder="IdCliente" required [disabled]="isEditMode"/>
+  <input type="text" [(ngModel)]="nombre" name="nombre" placeholder="nombre" required />
+  <input type="text" [(ngModel)]="id_articulo" name="id_articulo" placeholder="id_articulo" required [disabled]="isEditMode" />
+  <input type="number" [(ngModel)]="cantidad" name="cantidad" placeholder="Cantidad" min="0" required [disabled]="isEditMode"/>
+  <input type="text" [(ngModel)]="direccion" name="direccion" placeholder="direccion" required />
 
-  <button type="submit">{{ isEditMode ? 'Actualizar Disfraz' : 'Agregar Disfraz' }}</button>
+  <button type="submit">{{ isEditMode ? 'Actualizar Compra' : 'Agregar Compra' }}</button>
   <button type="reset" *ngIf="isEditMode" (click)="toogleEditMode()">Cancelar</button>
 </form>
 
-<!-- Mostrar la lista de disfraces -->
+<!-- Mostrar la lista de compras -->
 <ul>
-  <li *ngFor="let disfraz of disfraces">
+  <li *ngFor="let compra of compras">
     <h3 id="nombre">
-      {{ disfraz.nombre }}
+      {{ compra.nombre }}
     </h3>
-    <strong>Tipo:</strong> {{ disfraz.tipo }} <br>
-    <strong>Marca:</strong> {{ disfraz.marca }} <br>
-    <strong>Cantidad:</strong> {{ disfraz.cantidad }} 
-    <button (click)="increaseQuantity(disfraz._id)">+</button>
-    <button (click)="decreaseQuantity(disfraz._id)">-</button>
+    <strong>IdCliente:</strong> {{ compra.id_cliente }} <br>
+    <strong>Nombre:</strong> {{ compra.nombre }} <br>
+    <strong>IdArticulo:</strong> {{ compra.id_articulo }} 
     <br>
-    <strong>Precio:</strong> ${{ disfraz.precio }} <br>
-    <strong>ID:</strong> {{ disfraz._id }} <br>
-    <button (click)="editDisfraz(disfraz)">Editar</button>
-    <button (click)="deleteDisfrazPorId(disfraz._id)">Eliminar</button>
+    <strong>Cantidad:</strong> {{ compra.cantidad }} <br>
+    <strong>Direccion:</strong> {{ compra.direccion }} <br>
+    <strong>ID:</strong> {{ compra._id }} <br>
+<!-- AQUI IRIA LA REPRESENTACION DEL LOOKUP   ?????? -->
+    <button (click)="editCompra(compra)">Editar</button>
+    <button (click)="deleteCompraPorId(compra._id)">Eliminar</button>
   </li>
 </ul>
 

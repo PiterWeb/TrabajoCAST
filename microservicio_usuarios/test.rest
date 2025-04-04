@@ -1,4 +1,4 @@
-get http://localhost:3002/api/usuarios/
+# get http://localhost:3002/api/usuarios/
 
 # get http://localhost:3000/api/disfraces/67c19a26d3207018b34e8610
 
@@ -11,7 +11,7 @@ get http://localhost:3002/api/usuarios/
 POST http://localhost:3002/api/usuarios
  Content-Type: application/json
 
- {"rol":"Administrador"}
+ {"rol":"Cliente"}
 
 
 # DELETE http://localhost:3000/api/disfraces/67c1a46c09a55e7de2f9efcb
