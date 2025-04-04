@@ -2,8 +2,6 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DisfracesService } from './services/disfraces.service';
 import { FormsModule } from "@angular/forms";
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -49,10 +47,11 @@ export class AppComponent {
   }
 
   getDisfrazPorIdONombre(id: string) {
-    this.disfracesService.getDisfrazPorIdONombre(id)
+    this.disfracesService.getDisfrazPorIdONombre(id, this.idUsuarioMemorizado)
     .subscribe(data => {
       console.log(data)
-      this.disfraces = data?.length > 0 ? data : [data];
+      if (data?.length === 0) this.disfraces = [];
+      else this.disfraces = data?.length > 0 ? data : [data];
     });
   }
 
@@ -61,11 +60,11 @@ export class AppComponent {
       const newDisfraz = { tipo: this.tipo, nombre: this.nombre, marca: this.marca, cantidad: this.cantidad, precio: this.precio };
 
       if (this.isEditMode) {
-        this.disfracesService.updateDisfraz(this.selectedDisfrazId, newDisfraz).subscribe(() => {
+        this.disfracesService.updateDisfraz(this.selectedDisfrazId, newDisfraz, this.idUsuarioMemorizado).subscribe(() => {
           this.getDisfraces();
         });
       } else {
-        this.disfracesService.addDisfraz(newDisfraz).subscribe(() => {
+        this.disfracesService.addDisfraz(newDisfraz, this.idUsuarioMemorizado).subscribe(() => {
           this.getDisfraces();
         });
       }
@@ -84,7 +83,7 @@ export class AppComponent {
   }
 
   deleteDisfrazPorId(id: string) {
-    this.disfracesService.deleteDisfraz(id).subscribe(() => {
+    this.disfracesService.deleteDisfraz(id, this.idUsuarioMemorizado).subscribe(() => {
       this.getDisfraces();
     });
   }
@@ -104,7 +103,7 @@ export class AppComponent {
     const disfraz = this.disfraces.find(d => d._id === id);
     if (disfraz) {
       disfraz.cantidad++;
-      this.disfracesService.updateDisfraz(id, { cantidad: disfraz.cantidad }).subscribe(() => {
+      this.disfracesService.updateDisfraz(id, { cantidad: disfraz.cantidad }, this.idUsuarioMemorizado).subscribe(() => {
         this.getDisfraces();
       });
     }
@@ -115,7 +114,7 @@ export class AppComponent {
     const disfraz = this.disfraces.find(d => d._id === id);
     if (disfraz && disfraz.cantidad > 0) {
       disfraz.cantidad--;
-      this.disfracesService.updateDisfraz(id, { cantidad: disfraz.cantidad }).subscribe(() => {
+      this.disfracesService.updateDisfraz(id, { cantidad: disfraz.cantidad }, this.idUsuarioMemorizado).subscribe(() => {
         this.getDisfraces();
       });
     }

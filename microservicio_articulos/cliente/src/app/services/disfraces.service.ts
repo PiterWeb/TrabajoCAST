@@ -11,38 +11,38 @@ export class DisfracesService {
 
   // Obtener todos los disfraces
   getDisfraces(idUsuario: string): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl+'?idUsuario='+idUsuario);
+    return this.http.get<any[]>(`${this.apiUrl}?idUsuario=${idUsuario}`);
   }
 
   // Obtener un disfraz por ID o nombre
-  getDisfrazPorIdONombre(id: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${id}`);
+  getDisfrazPorIdONombre(id: string, idUsuario:string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`);
   }
 
   // Agregar un nuevo disfraz
-  addDisfraz(disfraz: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, disfraz);
+  addDisfraz(disfraz: any, idUsuario: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}?idUsuario=${idUsuario}`, disfraz);
   }
 
   // Actualizar un disfraz por ID
-  updateDisfraz(id: string, disfraz: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, disfraz);
+  updateDisfraz(id: string, disfraz: any, idUsuario: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`, disfraz);
   }
 
   // Eliminar un disfraz por ID
-  deleteDisfraz(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  deleteDisfraz(id: string, idUsuario: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`);
   }
 
   // 📌 Incrementar la cantidad de un disfraz por ID
-  increaseQuantity(id: string, cantidadActual: number): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/${id}`, { cantidad: cantidadActual + 1 });
+  increaseQuantity(id: string, cantidadActual: number, idUsuario: string): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`, { cantidad: cantidadActual + 1 });
   }
 
   // 📌 Decrementar la cantidad de un disfraz por ID (permitiendo llegar a 0)
-  decreaseQuantity(id: string, cantidadActual: number): Observable<any> {
+  decreaseQuantity(id: string, cantidadActual: number, idUsuario: string): Observable<any> {
     const nuevaCantidad = cantidadActual > 0 ? cantidadActual - 1 : 0;
-    return this.http.patch<any>(`${this.apiUrl}/${id}`, { cantidad: nuevaCantidad });
+    return this.http.patch<any>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`, { cantidad: nuevaCantidad });
   }
 
 }
