@@ -25,7 +25,6 @@ export class AppComponent {
   precio: number = 0;
   isEditMode: boolean = false;
   selectedDisfrazId: string = '';
-  isAdminVar: boolean= false;
   idUsuarioMemorizado: string = '';
 
   constructor(private disfracesService: DisfracesService) {}
@@ -51,15 +50,6 @@ export class AppComponent {
 
   getDisfrazPorIdONombre(id: string) {
     this.disfracesService.getDisfrazPorIdONombre(id)
-    .pipe(
-      catchError(error => {
-        console.error(error)
-        // Quality control catches the problem
-        this.disfraces = []
-        // Send an apology note or fix the issue
-        return throwError(() => new Error('Oops! Something went wrong. Please try again later.'));
-      })
-    )
     .subscribe(data => {
       console.log(data)
       this.disfraces = data?.length > 0 ? data : [data];

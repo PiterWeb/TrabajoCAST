@@ -11,7 +11,7 @@ function isAdmin(req,res,next){
     .then(response => response.json())
     .then(response => {
         console.log(response)
-        if (response[0].rol === "Administrador") return next()
+        if (response.rol === "Administrador") return next()
         
         res.status(401).send('Sin autorizacion')
         
