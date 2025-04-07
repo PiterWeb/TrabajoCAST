@@ -6,16 +6,23 @@ const mongoose = require("mongoose")
 // 📌 Obtener todas las compras
 router.get("/", async (req, res) => {
   try {
-    const compras = await Compras.find();
-    Compras.aggregate([{
-      $lookup: {
-          from: 'userstories',
-          localField: 'Userstories',
-          foreignField: '_id',
-          as: 'Userstories',
-          let
+    const compras = await Compras.aggregate([
+      {
+        $lookup: {
+            from: "disfrazs",
+            localField: "id_articulo",
+            foreignField: "_id",
+            as: "disfraz"
+        }
+      },
+      {$unwind: "$disfraz"}, 
+      {
+        $project: {
+          "disfraz.cantidad": 0
+        }
       }
-  }])
+    ]).exec();
+
     res.json(compras);
   } catch (err) {
     res.status(500).json({ error: err.message });
