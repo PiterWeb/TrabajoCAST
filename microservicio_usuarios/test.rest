@@ -1,4 +1,12 @@
-# get http://localhost:3002/api/usuarios/
+ get http://localhost:3002/api/usuarios/
+
+
+# {
+#     "_id": "67f8ed5340a841d29a35f34e",
+#     "rol": "Administrador",
+#     "__v": 0
+#   },
+
 
 # get http://localhost:3000/api/disfraces/67c19a26d3207018b34e8610
 
@@ -8,10 +16,10 @@
 #  {"nombre": " el test"}
 
 
-POST http://localhost:3002/api/usuarios
- Content-Type: application/json
+# POST http://localhost:3002/api/usuarios
+#  Content-Type: application/json
 
- {"rol":"Cliente"}
+#  {"rol":"Cliente"}
 
 
 # DELETE http://localhost:3000/api/disfraces/67c1a46c09a55e7de2f9efcb

@@ -1,6 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, effect, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DisfracesService } from './services/usuarios.service';
+import { UsuariosService } from './services/usuarios.service';
 import { FormsModule } from "@angular/forms";
 
 @Component({
@@ -10,10 +10,11 @@ import { FormsModule } from "@angular/forms";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  disfraces: any[] = [];
+export class AppComponent implements OnInit{
+  usuarios: any[] = [];
   title = 'cliente';
   id = signal('');
+  roll =signal('');
   idUsuario = signal('');
   // Variables para el formulario de agregar/editar
   tipo: string = '';
@@ -21,103 +22,81 @@ export class AppComponent {
   marca: string = '';
   cantidad: number = 1;
   precio: number = 0;
+  rol: string = '';
   isEditMode: boolean = false;
-  selectedDisfrazId: string = '';
+  selectedUsuarioId: string = '';
 
-  constructor(private disfracesService: DisfracesService) {}
+  constructor(private usuariosService: UsuariosService) {
+    effect(()=>{
+      console.log('hola')
+      this.idUsuario()
+      this.ocultarUsuarios()
+    })
+  }
+  ngOnInit(): void {
+    
+  }
 
   toogleEditMode() {
     this.isEditMode = !this.isEditMode
     if (!this.isEditMode) {
       this.resetForm()
-      this.selectedDisfrazId = ""
+      this.selectedUsuarioId = ""
     }
   }
 
-  getDisfraces() {
-    this.disfracesService.getDisfraces().subscribe(data => {
-      this.disfraces = data;
+  getUsuarios() {
+    this.usuariosService.getUsuarios(this.idUsuario()).subscribe(data => {
+      this.usuarios = data;
     });
   }
 
-  ocultarDisfraces() {
-    this.disfraces = [];
+  ocultarUsuarios() {
+    this.usuarios = [];
   }
 
-  getDisfrazPorIdONombre(id: string) {
-    this.disfracesService.getDisfrazPorIdONombre(id).subscribe(data => {
+  getUsuarioPorIdORol(id: string) {
+    this.usuariosService.getUsuarioPorIdORol(id,this.idUsuario()).subscribe(data => {
       console.log(data)
-      this.disfraces = data?.length > 0 ? data : [data];
+      this.usuarios = data?.length > 0 ? data : [data];
     });
   }
 
-  addOrUpdateDisfraz() {
-    if (this.tipo && this.nombre && this.marca && this.cantidad >= 0 && this.precio > 0) {
-      const newDisfraz = { tipo: this.tipo, nombre: this.nombre, marca: this.marca, cantidad: this.cantidad, precio: this.precio };
+  addOrUpdateUsuario() {
+    if (this.rol) {
+      const newUsuario = { rol: this.rol };
 
-      if (this.isEditMode) {
-        this.disfracesService.updateDisfraz(this.selectedDisfrazId, newDisfraz).subscribe(() => {
-          this.getDisfraces();
+     
+        this.usuariosService.addUsuario(newUsuario,this.idUsuario()).subscribe(() => {
+          this.getUsuarios();
         });
-      } else {
-        this.disfracesService.addDisfraz(newDisfraz).subscribe(() => {
-          this.getDisfraces();
-        });
-      }
+      
       this.resetForm();
     }
   }
-
-  editDisfraz(disfraz: any) {
-    this.tipo = disfraz.tipo;
-    this.nombre = disfraz.nombre;
-    this.marca = disfraz.marca;
-    this.cantidad = disfraz.cantidad;
-    this.precio = disfraz.precio;
-    this.selectedDisfrazId = disfraz._id;
+ // NO SE USA EN ESTE MICROSERVICIO
+  editDisfraz(usuario: any) {
+    this.rol = usuario.rol;
     this.isEditMode = true;
   }
 
-  deleteDisfrazPorId(id: string) {
-    this.disfracesService.deleteDisfraz(id).subscribe(() => {
-      this.getDisfraces();
+  deleteUsuarioPorId(id: string) {
+    this.usuariosService.deleteUsuario(id,this.idUsuario()).subscribe(() => {
+      this.getUsuarios();
     });
   }
 
   resetForm() {
-    this.tipo = '';
-    this.nombre = '';
-    this.marca = '';
-    this.cantidad = 1;
-    this.precio = 0;
+    this.rol = '';
+    
     this.isEditMode = false;
-    this.selectedDisfrazId = '';
+    this.selectedUsuarioId = '';
   }
 
-  /** 📌 Aumentar la cantidad de un disfraz **/
-  increaseQuantity(id: string) {
-    const disfraz = this.disfraces.find(d => d._id === id);
-    if (disfraz) {
-      disfraz.cantidad++;
-      this.disfracesService.updateDisfraz(id, { cantidad: disfraz.cantidad }).subscribe(() => {
-        this.getDisfraces();
-      });
-    }
-  }
-
-  /** 📌 Disminuir la cantidad de un disfraz (permitiendo llegar a 0) **/
-  decreaseQuantity(id: string) {
-    const disfraz = this.disfraces.find(d => d._id === id);
-    if (disfraz && disfraz.cantidad > 0) {
-      disfraz.cantidad--;
-      this.disfracesService.updateDisfraz(id, { cantidad: disfraz.cantidad }).subscribe(() => {
-        this.getDisfraces();
-      });
-    }
-  }
+  
   isAdmin(idUsuario:string){
-    console.log(this.disfracesService.isAdmin(idUsuario));
-    return this.disfracesService.isAdmin(idUsuario);
+    console.log(this.usuariosService.isAdmin(idUsuario));
+    return this.usuariosService.isAdmin(idUsuario);
     
     
   }

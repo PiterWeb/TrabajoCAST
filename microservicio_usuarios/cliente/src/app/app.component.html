@@ -4,52 +4,45 @@
   <h2>​Administrador</h2>
 </header>
 <input [(ngModel)]="idUsuario" id="newId">
-<button (click)="isAdmin(idUsuario())">EsAdmin?</button>
-<button (click)="getDisfraces()">Mostrar Disfraces</button>
+<!-- <button (click)="isAdmin(idUsuario())">EsAdmin?</button> -->
+<button (click)="getUsuarios()">Mostrar Usuarios</button>
 <!-- Mostrar la lista de disfraces con todos los campos -->
 
-<button *ngIf="disfraces.length > 0" (click)="ocultarDisfraces()">Ocultar Disfraces</button>
+<button *ngIf="usuarios.length > 0" (click)="ocultarUsuarios()">Ocultar Usuarios</button>
 <br>
 <input [(ngModel)]="id" id="newId">
-<button (click)="getDisfrazPorIdONombre(id())">Filtrar por ID</button>
+<button (click)="getUsuarioPorIdORol(id())">Filtrar por ID</button>
+<br>
+<select [(ngModel)]="roll" name="rol" required>
+  <option value="">Selecciona el tipo de usuario</option>
+  <option value="Cliente">Cliente</option>
+  <option value="Administrador">Administrador</option>
 
+</select>
+<button (click)="getUsuarioPorIdORol(roll())">Filtrar por rol</button>
 
 
 <!-- Formulario para agregar/editar un disfraz -->
-<form (ngSubmit)="addOrUpdateDisfraz()">
-  <select [(ngModel)]="tipo" name="tipo" required>
-    <option value="">Selecciona el tipo de disfraz</option>
-    <option value="Payaso">Payaso</option>
-    <option value="Niño">Niño</option>
-    <option value="Animmales">Animmales</option>
-    <option value="Navideños">Navideños</option>
+<form (ngSubmit)="addOrUpdateUsuario()">
+  <select [(ngModel)]="rol" name="rol" required>
+    <option value="">Selecciona el tipo de usuario</option>
+    <option value="Cliente">Cliente</option>
+    <option value="Administrador">Administrador</option>
+    
   </select>
-
-  <input type="text" [(ngModel)]="nombre" name="nombre" placeholder="Nombre" required />
-  <input type="text" [(ngModel)]="marca" name="marca" placeholder="Marca" required />
-  <input type="number" [(ngModel)]="cantidad" name="cantidad" placeholder="Cantidad" min="0" required />
-  <input type="number" [(ngModel)]="precio" name="precio" placeholder="Precio" min="0" required />
-
   <button type="submit">{{ isEditMode ? 'Actualizar Disfraz' : 'Agregar Disfraz' }}</button>
   <button type="reset" *ngIf="isEditMode" (click)="toogleEditMode()">Cancelar</button>
 </form>
 
 <!-- Mostrar la lista de disfraces -->
 <ul>
-  <li *ngFor="let disfraz of disfraces">
-    <h3 id="nombre">
-      {{ disfraz.nombre }}
-    </h3>
-    <strong>Tipo:</strong> {{ disfraz.tipo }} <br>
-    <strong>Marca:</strong> {{ disfraz.marca }} <br>
-    <strong>Cantidad:</strong> {{ disfraz.cantidad }} 
-    <button (click)="increaseQuantity(disfraz._id)">+</button>
-    <button (click)="decreaseQuantity(disfraz._id)">-</button>
-    <br>
-    <strong>Precio:</strong> ${{ disfraz.precio }} <br>
-    <strong>ID:</strong> {{ disfraz._id }} <br>
-    <button (click)="editDisfraz(disfraz)">Editar</button>
-    <button (click)="deleteDisfrazPorId(disfraz._id)">Eliminar</button>
+  <li *ngFor="let usuario of usuarios">
+    
+    <strong>ID:</strong> {{ usuario.rol }} <br>
+    
+    
+    <strong>ID:</strong> {{ usuario._id }} <br>
+    <button (click)="deleteUsuarioPorId(usuario._id)">Eliminar</button>
   </li>
 </ul>
 

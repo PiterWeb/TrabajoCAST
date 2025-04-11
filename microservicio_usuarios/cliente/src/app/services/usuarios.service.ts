@@ -11,28 +11,27 @@ export class UsuariosService {
   constructor(private http: HttpClient) {}
 
   // Obtener todos los usuarios
-  getUsuarios(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  getUsuarios(idUsuario: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}?idUsuario=${idUsuario}`);
   }
 
   // Obtener un usuario por ID o nombre
-  getUsuarioPorIdORol(id: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${id}`);
+  getUsuarioPorIdORol(id: string, idUsuario:string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`);
   }
 
   // Agregar un nuevo usuario
-  addUsuario(disfraz: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, disfraz);
+  addUsuario(usuario: any, idUsuario: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}?idUsuario=${idUsuario}`, usuario);
   }
+
 
   // Actualizar un usuario por ID
-  updateUsuario(id: string, disfraz: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, disfraz);
-  }
+ 
 
   // Eliminar un usuario por ID
-  deleteUsuario(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  deleteUsuario(id: string, idUsuario: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`);
   }
 
   isAdmin(idUsuario: string){
