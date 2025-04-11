@@ -11,7 +11,7 @@
 POST http://localhost:3002/api/usuarios
  Content-Type: application/json
 
- {"rol":"Cliente"}
+ {"rol":"Administrador"}
 
 
 # DELETE http://localhost:3000/api/disfraces/67c1a46c09a55e7de2f9efcb
