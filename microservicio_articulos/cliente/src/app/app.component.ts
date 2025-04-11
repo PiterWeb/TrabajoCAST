@@ -48,7 +48,8 @@ export class AppComponent {
         if (err.status === 401) {
           this.resetForm();
           alert('No tiene permisos de administrador para realizar esta acción');
-          window.location.reload();
+          this.ocultarDisfraces();
+          
         } else {
           alert('Ocurrió un error al obtener los disfraces');
         }
@@ -71,7 +72,8 @@ export class AppComponent {
         if (err.status === 401) {
           this.resetForm();
           alert('No tiene permisos de administrador para realizar esta acción');
-          window.location.reload();
+          this.ocultarDisfraces();
+          //window.location.reload();
         } else {
           alert('Ocurrió un error al buscar el disfraz');
         }
@@ -102,7 +104,8 @@ export class AppComponent {
           if (err.status === 401) {
             this.resetForm();
             alert('No tiene permisos de administrador para realizar esta acción');
-            window.location.reload();
+            this.ocultarDisfraces();
+            //window.location.reload();
           } else {
             alert('Ocurrió un error al guardar el disfraz');
           }
@@ -131,7 +134,8 @@ export class AppComponent {
         if (err.status === 401) {
           this.resetForm();
           alert('No tiene permisos de administrador para realizar esta acción');
-          window.location.reload();
+          this.ocultarDisfraces();
+          //window.location.reload();
         } else {
           alert('Ocurrió un error al eliminar el disfraz');
         }
