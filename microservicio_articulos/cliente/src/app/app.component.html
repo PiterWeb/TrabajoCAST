@@ -3,22 +3,34 @@
   <svg id="svg-cabecera" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask"><path d="M18 11c-1.5 0-2.5.5-3 2"/><path d="M4 6a2 2 0 0 0-2 2v4a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2z"/><path d="M6 11c1.5 0 2.5.5 3 2"/></svg>
   <h2>​Administrador</h2>
 </header>
-<input [(ngModel)]="idUsuario" id="newId">
-<button (click)="memorizarUsuario(idUsuario())">Ok</button>
-<br>
-<button (click)="getDisfraces()">Mostrar Disfraces</button>
-<!-- Mostrar la lista de disfraces con todos los campos -->
 
+
+<!-- Mostrar la lista de disfraces con todos los campos -->
+<form (ngSubmit)="getDisfraces()">
+  <input type="text" [(ngModel)]="idUsuarioGet" name="idUsuarioGet" placeholder="ID de usuario" required />
+
+  <button type="submit">Mostrar disfraces</button>
+</form>
 <button *ngIf="disfraces.length > 0" (click)="ocultarDisfraces()">Ocultar Disfraces</button>
 <br>
-<input [(ngModel)]="id" id="newId">
-<button (click)="getDisfrazPorIdONombre(id())">Filtrar por ID</button>
-<button (click)="getDisfrazPorIdONombre(id())">Filtrar por Nombre</button>
 
+<!-- Formulario para buscar por ID o Nombre -->
+<form (ngSubmit)="getDisfrazPorIdONombre(id())">
+  <input type="text" 
+         [ngModel]="id()" 
+         (ngModelChange)="id.set($event)"
+         name="searchTerm"
+         placeholder="ID o Nombre del disfraz" 
+         required />
+  <input type="text" [(ngModel)]="idUsuarioSearch" name="idUsuarioSearch" placeholder="ID de usuario" required />
+  <button type="submit">Buscar Disfraz</button>
+</form>
 
 
 <!-- Formulario para agregar/editar un disfraz -->
 <form (ngSubmit)="addOrUpdateDisfraz()">
+  <input type="text" [(ngModel)]="idUsuarioUpdate" name="idUsuarioUpdate" placeholder="ID de usuario" required />
+
   <select [(ngModel)]="tipo" name="tipo" required>
     <option value="">Selecciona el tipo de disfraz</option>
     <option value="Payaso">Payaso</option>
@@ -45,13 +57,15 @@
     <strong>Tipo:</strong> {{ disfraz.tipo }} <br>
     <strong>Marca:</strong> {{ disfraz.marca }} <br>
     <strong>Cantidad:</strong> {{ disfraz.cantidad }} 
-    <button (click)="increaseQuantity(disfraz._id)">+</button>
-    <button (click)="decreaseQuantity(disfraz._id)">-</button>
     <br>
-    <strong>Precio:</strong> ${{ disfraz.precio }} <br>
+    <strong>Precio:</strong> {{ disfraz.precio }}€<br>
     <strong>ID:</strong> {{ disfraz._id }} <br>
-    <button (click)="editDisfraz(disfraz)">Editar</button>
-    <button (click)="deleteDisfrazPorId(disfraz._id)">Eliminar</button>
+  <button (click)="editDisfraz(disfraz)">Editar</button><br>
+    <!-- Formulario para eliminar -->
+    <form (ngSubmit)="deleteDisfrazPorId(disfraz._id)" style="display: inline;">
+      <input type="text" [(ngModel)]="idUsuarioDelete" name="idUsuarioDelete" placeholder="ID de usuario" required />
+      <button type="submit">Eliminar</button>
+    </form>
   </li>
 </ul>
 

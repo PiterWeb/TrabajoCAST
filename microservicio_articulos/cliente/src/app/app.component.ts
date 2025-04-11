@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DisfracesService } from './services/disfraces.service';
 import { FormsModule } from "@angular/forms";
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -14,8 +15,11 @@ export class AppComponent {
   disfraces: any[] = [];
   title = 'cliente';
   id = signal('');
-  idUsuario = signal('');
   // Variables para el formulario de agregar/editar
+  idUsuarioGet: string = '';
+  idUsuarioUpdate: string = '';
+  idUsuarioDelete: string = '';
+  idUsuarioSearch: string = '';
   tipo: string = '';
   nombre: string = '';
   marca: string = '';
@@ -23,22 +27,33 @@ export class AppComponent {
   precio: number = 0;
   isEditMode: boolean = false;
   selectedDisfrazId: string = '';
-  idUsuarioMemorizado: string = '';
 
   constructor(private disfracesService: DisfracesService) {}
 
   toogleEditMode() {
-    this.isEditMode = !this.isEditMode
+    this.isEditMode = !this.isEditMode;
     if (!this.isEditMode) {
-      this.resetForm()
-      this.selectedDisfrazId = ""
+      this.resetForm();
+      this.selectedDisfrazId = "";
     }
   }
 
   getDisfraces() {
-    this.disfracesService.getDisfraces(this.idUsuarioMemorizado)
-    .subscribe(data => {
-      this.disfraces = data;
+    this.disfracesService.getDisfraces(this.idUsuarioGet)
+    .subscribe({
+      next: (data) => {
+        this.disfraces = data;
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 401) {
+          this.resetForm();
+          alert('No tiene permisos de administrador para realizar esta acción');
+          this.ocultarDisfraces();
+          
+        } else {
+          alert('Ocurrió un error al obtener los disfraces');
+        }
+      }
     });
   }
 
@@ -47,28 +62,55 @@ export class AppComponent {
   }
 
   getDisfrazPorIdONombre(id: string) {
-    this.disfracesService.getDisfrazPorIdONombre(id, this.idUsuarioMemorizado)
-    .subscribe(data => {
-      console.log(data)
-      if (data?.length === 0) this.disfraces = [];
-      else this.disfraces = data?.length > 0 ? data : [data];
+    this.disfracesService.getDisfrazPorIdONombre(id, this.idUsuarioSearch)
+    .subscribe({
+      next: (data) => {
+        if (data?.length === 0) this.disfraces = [];
+        else this.disfraces = data?.length > 0 ? data : [data];
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 401) {
+          this.resetForm();
+          alert('No tiene permisos de administrador para realizar esta acción');
+          this.ocultarDisfraces();
+          //window.location.reload();
+        } else {
+          alert('Ocurrió un error al buscar el disfraz');
+        }
+      }
     });
   }
 
   addOrUpdateDisfraz() {
     if (this.tipo && this.nombre && this.marca && this.cantidad >= 0 && this.precio > 0) {
-      const newDisfraz = { tipo: this.tipo, nombre: this.nombre, marca: this.marca, cantidad: this.cantidad, precio: this.precio };
+      const newDisfraz = { 
+        tipo: this.tipo, 
+        nombre: this.nombre, 
+        marca: this.marca, 
+        cantidad: this.cantidad, 
+        precio: this.precio 
+      };
 
-      if (this.isEditMode) {
-        this.disfracesService.updateDisfraz(this.selectedDisfrazId, newDisfraz, this.idUsuarioMemorizado).subscribe(() => {
+      const observable = this.isEditMode 
+        ? this.disfracesService.updateDisfraz(this.selectedDisfrazId, newDisfraz, this.idUsuarioUpdate)
+        : this.disfracesService.addDisfraz(newDisfraz, this.idUsuarioUpdate);
+
+      observable.subscribe({
+        next: () => {
           this.getDisfraces();
-        });
-      } else {
-        this.disfracesService.addDisfraz(newDisfraz, this.idUsuarioMemorizado).subscribe(() => {
-          this.getDisfraces();
-        });
-      }
-      this.resetForm();
+          this.resetForm();
+        },
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 401) {
+            this.resetForm();
+            alert('No tiene permisos de administrador para realizar esta acción');
+            this.ocultarDisfraces();
+            //window.location.reload();
+          } else {
+            alert('Ocurrió un error al guardar el disfraz');
+          }
+        }
+      });
     }
   }
 
@@ -83,12 +125,29 @@ export class AppComponent {
   }
 
   deleteDisfrazPorId(id: string) {
-    this.disfracesService.deleteDisfraz(id, this.idUsuarioMemorizado).subscribe(() => {
-      this.getDisfraces();
+    this.disfracesService.deleteDisfraz(id, this.idUsuarioDelete)
+    .subscribe({
+      next: () => {
+        this.getDisfraces();
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 401) {
+          this.resetForm();
+          alert('No tiene permisos de administrador para realizar esta acción');
+          this.ocultarDisfraces();
+          //window.location.reload();
+        } else {
+          alert('Ocurrió un error al eliminar el disfraz');
+        }
+      }
     });
   }
 
   resetForm() {
+    this.idUsuarioGet = '';
+    this.idUsuarioUpdate = '';
+    this.idUsuarioSearch = '';
+    this.idUsuarioDelete = '';
     this.tipo = '';
     this.nombre = '';
     this.marca = '';
@@ -96,35 +155,6 @@ export class AppComponent {
     this.precio = 0;
     this.isEditMode = false;
     this.selectedDisfrazId = '';
-  }
-
-  /** 📌 Aumentar la cantidad de un disfraz **/
-  increaseQuantity(id: string) {
-    const disfraz = this.disfraces.find(d => d._id === id);
-    if (disfraz) {
-      disfraz.cantidad++;
-      this.disfracesService.updateDisfraz(id, { cantidad: disfraz.cantidad }, this.idUsuarioMemorizado).subscribe(() => {
-        this.getDisfraces();
-      });
-    }
-  }
-
-  /** 📌 Disminuir la cantidad de un disfraz (permitiendo llegar a 0) **/
-  decreaseQuantity(id: string) {
-    const disfraz = this.disfraces.find(d => d._id === id);
-    if (disfraz && disfraz.cantidad > 0) {
-      disfraz.cantidad--;
-      this.disfracesService.updateDisfraz(id, { cantidad: disfraz.cantidad }, this.idUsuarioMemorizado).subscribe(() => {
-        this.getDisfraces();
-      });
-    }
-  }
-  memorizarUsuario(idUsuario:string){
-    
-    this.idUsuarioMemorizado = idUsuario;
-    this.resetForm()
-    this.ocultarDisfraces()
-    
   }
 }
 
