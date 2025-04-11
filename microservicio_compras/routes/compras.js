@@ -36,7 +36,26 @@ router.get("/:param", async (req, res) => {
   // Verifica si el parámetro es un ObjectId válido
   if (mongoose.Types.ObjectId.isValid(param)) {
     try {
-      const compras = await Compras.findById(param);
+      const compras = await Compras.aggregate([
+        {
+          $lookup: {
+              from: "disfrazs",
+              localField: "id_articulo",
+              foreignField: "_id",
+              as: "disfraz",
+              pipeline: [
+                {$match: {id_cliente: param}}
+              ]
+          }
+        },
+        {$unwind: "$disfraz"}, 
+        {
+          $project: {
+            "disfraz.cantidad": 0
+          }
+        }
+      ]).exec();
+      // const compras = await Compras.findById(param);
       if (!compras) return res.status(404).json({ mensaje: "Compra no encontrada" });
       res.status(200).json(compras);
     } catch (err) {
