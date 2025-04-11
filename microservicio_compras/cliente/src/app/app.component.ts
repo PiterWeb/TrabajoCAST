@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ComprasService } from './services/compras.service';
 import { FormsModule } from "@angular/forms";
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,6 @@ export class AppComponent {
   direccion: string='';
   isEditMode: boolean = false;
   selectedCompraId: string = '';
-  idUsuarioMemorizado: string = '';
   constructor(private ComprasService: ComprasService) {}
 
   toogleEditMode() {
@@ -35,9 +35,14 @@ export class AppComponent {
   }
 
   getCompras() {
-    this.ComprasService.getCompras(this.idUsuarioMemorizado).subscribe(data => {
+    this.ComprasService.getCompras(this.idUsuario()).subscribe({
+      next: (data) => {
       this.compras = data;
-    });
+    },
+    error: (err: HttpErrorResponse) => {
+      this.handleError(err);
+    } 
+  });
   }
 
   ocultarCompras() {
@@ -45,9 +50,14 @@ export class AppComponent {
   }
 
   getComprasPorIdCliente(id: string) {
-    this.ComprasService.getComprasPorIdCliente(id,this.idUsuarioMemorizado).subscribe(data => {
+    this.ComprasService.getComprasPorIdCliente(id,this.idUsuario()).subscribe({
+      next: (data) => {
       console.log(data)
       this.compras = data?.length > 0 ? data : [data];
+      },
+      error: (error: HttpErrorResponse) => {
+        this.handleError(error);
+      }
     });
   }
 
@@ -56,12 +66,23 @@ export class AppComponent {
       const newCompra = { id_cliente: this.id_cliente, nombre: this.nombre, id_articulo: this.id_articulo, cantidad: this.cantidad, direccion: this.direccion };
 
       if (this.isEditMode) {
-        this.ComprasService.updateCompra(this.selectedCompraId, newCompra,this.idUsuarioMemorizado).subscribe(() => {
+        this.ComprasService.updateCompra(this.selectedCompraId, newCompra,this.idUsuario()).subscribe({
+          next: () => {
           this.getCompras();
-        });
+          this.resetForm();
+          },
+          error: (error: HttpErrorResponse) => {
+            this.handleError(error);
+          }
+       });
       } else {
-        this.ComprasService.addCompra(newCompra,this.idUsuarioMemorizado).subscribe(() => {
+        this.ComprasService.addCompra(newCompra,this.idUsuario()).subscribe({
+          next: () => {
           this.getCompras();
+          },
+          error: (error: HttpErrorResponse) => {
+            this.handleError(error);
+          }
         });
       }
       this.resetForm();
@@ -79,9 +100,13 @@ export class AppComponent {
   }
 
   deleteCompraPorId(id: string) {
-    this.ComprasService.deleteCompra(id,this.idUsuarioMemorizado).subscribe(() => {
+    this.ComprasService.deleteCompra(id,this.idUsuario()).subscribe({
+       next: () => {
       this.getCompras();
-    });
+    },error: (error: HttpErrorResponse) => {
+      this.handleError(error);
+    }
+  });
   }
 
   resetForm() {
@@ -94,14 +119,19 @@ export class AppComponent {
     this.selectedCompraId = '';
   }
 
-  memorizarUsuario(idUsuario:string){
-    
-    this.idUsuarioMemorizado = idUsuario;
-    this.resetForm()
-    this.ocultarCompras()
-    
+// Método centralizado para manejar errores
+private handleError(error: HttpErrorResponse) {
+  if (error.status === 401) {
+    this.resetForm();
+    alert('No tiene permisos de administrador para realizar esta acción');
+    this.ocultarCompras();
+  } else {
+    this.resetForm();
+    console.error('Error:', error);
+    alert('Ocurrió un error inesperado');
+    this.ocultarCompras();
   }
-
+}
 
 }
 

@@ -4,7 +4,6 @@
   <h2>​Administrador</h2>
 </header>
 <input [(ngModel)]="idUsuario" id="newId">
-<!-- <button (click)="isAdmin(idUsuario())">EsAdmin?</button> -->
 <button (click)="getUsuarios()">Mostrar Usuarios</button>
 <!-- Mostrar la lista de disfraces con todos los campos -->
 
@@ -38,7 +37,7 @@
 <ul>
   <li *ngFor="let usuario of usuarios">
     
-    <strong>ID:</strong> {{ usuario.rol }} <br>
+    <strong>Rol:</strong> {{ usuario.rol }} <br>
     
     
     <strong>ID:</strong> {{ usuario._id }} <br>
