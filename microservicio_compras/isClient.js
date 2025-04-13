@@ -1,22 +1,21 @@
 
-function isAdmin(req,res,next){
+function isClient(req,res,next){
 
     const idUsuario = req.query.idUsuario;
 
-    const apiUrlUsuarios = 'http://localhost:3002/api/usuarios';
+    const apiUrlUsuarios = 'http://localhost:3002/api/client';
 
-    fetch(`${apiUrlUsuarios}/${idUsuario}`, {
+    fetch(`${apiUrlUsuarios}?idUsuario=${idUsuario}`, {
         method: "GET"
     })
-    .then(response => response.json())
     .then(response => {
-        console.log(response)
-        if (response.rol === "Cliente") return next()
-        
-        res.status(401).send('Sin autorizacion')
-        
-    }).catch((_e) => res.status(500).send("Internal server error"))
+        if (response.status === 200) return next()
+
+        if (response.status === 401) return res.status(401).send('Sin autorizacion')
+
+        return res.status(500).send("Internal server error")
+    })
 
 }
 
-module.exports = isAdmin;
+module.exports = isClient;
