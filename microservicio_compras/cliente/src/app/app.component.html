@@ -42,12 +42,21 @@
     </h3>
     <strong>IdCliente:</strong> {{ compra.id_cliente }} <br>
     <strong>Nombre:</strong> {{ compra.nombre }} <br>
-    <strong>IdArticulo:</strong> {{ compra.id_articulo }} 
-    <br>
     <strong>Cantidad:</strong> {{ compra.cantidad }} <br>
     <strong>Direccion:</strong> {{ compra.direccion }} <br>
     <strong>ID:</strong> {{ compra._id }} <br>
 <!-- AQUI IRIA LA REPRESENTACION DEL LOOKUP   ?????? -->
+    <fieldset>
+      <legend>Articulo</legend>
+      <strong>
+        Nombre:
+      </strong>
+      {{ compra.disfraz.nombre }} <br>
+      <strong>Tipo:</strong> {{ compra.disfraz.tipo }} <br>
+      <strong>Marca:</strong> {{ compra.disfraz.marca }} <br>
+      <strong>Precio:</strong> {{ compra.disfraz.precio }}€<br>
+      <strong>ID:</strong> {{ compra.disfraz._id }} <br>
+    </fieldset>
     <button (click)="editCompra(compra)">Editar</button>
     <button (click)="deleteCompraPorId(compra._id)">Eliminar</button>
   </li>
