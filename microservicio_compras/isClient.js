@@ -14,7 +14,7 @@ function isClient(req,res,next){
         if (response.status === 401) return res.status(401).send('Sin autorizacion')
 
         return res.status(500).send("Internal server error")
-    })
+    }).catch(_e => res.status(500).send("Internal server error"))
 
 }
 
