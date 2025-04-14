@@ -27,7 +27,7 @@ app.get("/api/admin", async (req, res) => {
     const usuarios = await Usuario.findById(idUsuario);
     if (!usuarios) return res.status(404).json({ mensaje: "Usuario no encontrado" });
     console.log(usuarios)
-    if (usuarios.rol === "Administrador") return res.status(200)
+    if (usuarios.rol === "Administrador") return res.status(200).send("OK")
     res.status(401).send('Sin autorizacion')
   } catch (err) {
     res.status(500).send("Internal server error")
