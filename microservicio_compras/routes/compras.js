@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// 📌 Obtener una compra por ID o nombre
+// 📌 Obtener una compra por ID de articulo
 router.get("/:param", async (req, res) => {
   const param = req.params.param;
   const id_cliente = req.query.idUsuario
@@ -42,7 +42,12 @@ router.get("/:param", async (req, res) => {
   if (mongoose.Types.ObjectId.isValid(param)) {
     try {
       const compras = await Compras.aggregate([
-        {$match: {id_cliente: new mongoose.Types.ObjectId(id_cliente)}},
+        {
+          $match: {
+            id_cliente: new mongoose.Types.ObjectId(id_cliente),
+            id_articulo: new mongoose.Types.ObjectId(param)
+          }
+        },
         {
           $lookup: {
               from: "disfrazs",
@@ -50,7 +55,7 @@ router.get("/:param", async (req, res) => {
               foreignField: "_id",
               as: "disfraz",
           }
-         },
+        },
         {$unwind: "$disfraz"}, 
         {
           $project: {
@@ -65,16 +70,8 @@ router.get("/:param", async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   } else {
-    // Si no es un ObjectId, buscar por nombre
-    try {
-      const compras = await Compras.find({
-        nombre: { $regex: new RegExp(param, "i") },
-      });
-      if (!compras) return res.status(404).json({ mensaje: "Compra no encontrada" });
-      res.status(200).json(compras);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
+    // Si no es un ObjectId
+    res.status(500).json({ error: "El parametro enviado no es un ID" });
   }
 });
 
