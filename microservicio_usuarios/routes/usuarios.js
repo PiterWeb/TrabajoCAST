@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Usuario = require("../models/Usuario");
 const mongoose = require("mongoose")
+const isAdminMiddleware = require("../isAdmin")
+
+router.use(isAdminMiddleware)
 
 // 📌 Obtener todos los usuarios
 router.get("/", async (req, res) => {

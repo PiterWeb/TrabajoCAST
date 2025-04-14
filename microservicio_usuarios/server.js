@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const isAdminMiddleware = require('./isAdmin')
 const Usuario = require("./models/Usuario")
 require("dotenv").config();
 
@@ -19,7 +18,6 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Importar rutas
 const usuariosRoutes = require("./routes/usuarios");
-usuariosRoutes.use(isAdminMiddleware)
 app.use("/api/usuarios", usuariosRoutes);
 
 app.get("/api/admin", async (req, res) => {
