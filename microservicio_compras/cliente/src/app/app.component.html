@@ -4,7 +4,40 @@
   <h2>​Administrador</h2>
 </header>
 <input [(ngModel)]="idUsuario" id="newId">
-<button (click)="getCompras()">Mostrar compras</button>
+
+
+<!-- Botones para mostrar y ocultar disfraces -->
+ <br>
+<button (click)="getDisfraces()">Mostrar artículos</button>
+
+
+<!-- Mostrar la lista de disfraces solo si 'mostrarDisfraces' es true -->
+<ul *ngIf="mostrarDisfraces">
+  <br>
+  <form (ngSubmit)="getDisfrazPorIdONombre(id_Articulo())">
+    <input type="text" 
+           [ngModel]="id_Articulo()" 
+           (ngModelChange)="id_Articulo.set($event)"
+           name="searchTerm"
+           placeholder="ID o Nombre del disfraz" 
+           required />
+    
+    <button type="submit">Buscar Disfraz</button>
+  </form>
+  <br>
+  <br>
+  <li *ngFor="let disfraz of disfraces">
+    <h3 id="nombre">{{ disfraz.nombre }}</h3>
+    <strong>Tipo:</strong> {{ disfraz.tipo }} <br>
+    <strong>Marca:</strong> {{ disfraz.marca }} <br>
+    <strong>Cantidad:</strong> {{ disfraz.cantidad }} <br>
+    <strong>Precio:</strong> {{ disfraz.precio }}€<br>
+    <strong>ID:</strong> {{ disfraz._id }} <br>
+  </li>
+  <br>
+  <button (click)="ocultarDisfraces()">Ocultar artículos</button>
+</ul>
+
 <!-- Mostrar la lista de compras con todos los campos -->
 
 <button *ngIf="compras.length > 0" (click)="ocultarCompras()">Ocultar compras</button>
@@ -35,6 +68,7 @@
 </form>
 
 <!-- Mostrar la lista de compras -->
+<button (click)="getCompras()">Mostrar compras</button>
 <ul>
   <li *ngFor="let compra of compras">
     <h3 id="nombre">
@@ -60,5 +94,7 @@
     <button (click)="editCompra(compra)">Editar</button>
     <button (click)="deleteCompraPorId(compra._id)">Eliminar</button>
   </li>
+  <br>
+  <button *ngIf="compras.length > 0" (click)="ocultarCompras()">Ocultar compras</button>
 </ul>
 

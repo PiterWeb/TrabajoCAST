@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ComprasService {
   private apiUrl = 'http://localhost:3001/api/compras'; // Ajusta según tu backend
-
+  private apiUrlDisfraces = 'http://localhost:3001/api/compras/articulos';
   constructor(private http: HttpClient) {}
 
   // Obtener todas las compras
@@ -33,6 +33,14 @@ export class ComprasService {
   // Eliminar un compra por ID
   deleteCompra(id: string, idUsuario: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`);
+  }
+  // Obtener todos los disfraces
+  getDisfraces(idUsuario: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrlDisfraces}?idUsuario=${idUsuario}`);
+  }
+  //Obtener disfraces por id o nombre
+  getDisfrazPorIdONombre(id: string, idUsuario:string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrlDisfraces}/${id}?idUsuario=${idUsuario}`);
   }
 
 }

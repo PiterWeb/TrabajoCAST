@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Compras = require("../models/Compras");
+const Disfraz = require("../models/Disfraz");
 const mongoose = require("mongoose")
+
+
+
+
 
 // 📌 Obtener todas las compras de un id de usuario
 router.get("/", async (req, res) => {
@@ -32,6 +37,46 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+
+// TESTEO DE RUTAS PARA NO-MICROSERVICIO ARTICULOS
+
+router.get("/articulos", async (req, res) => {
+  console.log(" Entrando en /api/compras/articulos");
+  try {
+    const articulos = await Disfraz.find();
+    res.json(articulos);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/articulos/:param", async (req, res) => {
+  const param = req.params.param;
+
+  // Verifica si el parámetro es un ObjectId válido
+  if (mongoose.Types.ObjectId.isValid(param)) {
+    try {
+      const disfraz = await Disfraz.findById(param);
+      if (!disfraz) return res.status(404).json({ mensaje: "Disfraz no encontrado" });
+      res.status(200).json(disfraz);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  } else {
+    // Si no es un ObjectId, buscar por nombre
+    try {
+      const disfraz = await Disfraz.find({
+        nombre: { $regex: new RegExp(param, "i") },
+      });
+      if (!disfraz) return res.status(404).json({ mensaje: "Disfraz no encontrado" });
+      res.status(200).json(disfraz);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+});
+
 
 // 📌 Obtener una compra por ID de articulo
 router.get("/:param", async (req, res) => {
@@ -115,5 +160,7 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+
 
 module.exports = router;

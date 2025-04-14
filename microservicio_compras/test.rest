@@ -1,5 +1,7 @@
 # get http://localhost:3000/api/disfraces/
 
+GET http://localhost:3001/api/compras/articulos
+
 # get http://localhost:3000/api/disfraces/67c19a26d3207018b34e8610
 
 # PUT http://localhost:3000/api/disfraces/67c09d6281c72068d12e7c21 
@@ -8,11 +10,11 @@
 # {"nombre": " el test"}
 
 
-POST http://localhost:3001/api/compras
-Content-Type: application/json
+# POST http://localhost:3001/api/compras
+# Content-Type: application/json
 
-{"nombre": "carnaval", "marca": "hola",
- "cantidad": 50, "precio": 2229.99}
+# {"nombre": "carnaval", "marca": "hola",
+#  "cantidad": 50, "precio": 2229.99}
 
 
 # DELETE http://localhost:3000/api/disfraces/67c1a46c09a55e7de2f9efcb

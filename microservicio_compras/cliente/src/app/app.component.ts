@@ -13,6 +13,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class AppComponent {
   compras: any[] = [];
+  disfraces: any[] = [];
+  id_Articulo= signal('');
+  nombre_Articulo= signal('');
   title = 'cliente';
   id = signal('');
   idUsuario = signal('');
@@ -24,6 +27,7 @@ export class AppComponent {
   direccion: string='';
   isEditMode: boolean = false;
   selectedCompraId: string = '';
+  mostrarDisfraces: boolean = false;
   constructor(private ComprasService: ComprasService) {}
 
   toogleEditMode() {
@@ -118,6 +122,47 @@ export class AppComponent {
     this.isEditMode = false;
     this.selectedCompraId = '';
   }
+
+// TEST Para la gestion de ARTICULOS EN COMPRAS
+
+getDisfraces() {
+  this.ComprasService.getDisfraces(this.idUsuario()).subscribe({
+    next: (data) => {
+      this.disfraces = data;
+      this.mostrarDisfraces = true; // Mostrar los disfraces al recibir los datos
+    },
+    error: (err: HttpErrorResponse) => {
+      this.handleError(err);
+    }
+  });
+}
+
+getDisfrazPorIdONombre(id: string) {
+  this.ComprasService.getDisfrazPorIdONombre(id, this.idUsuario())
+  .subscribe({
+    next: (data) => {
+      if (data?.length === 0) this.disfraces = [];
+      else this.disfraces = data?.length > 0 ? data : [data];
+    },
+    error: (err: HttpErrorResponse) => {
+      if (err.status === 401) {
+        this.resetForm();
+        alert('No tiene permisos de administrador para realizar esta acción');
+        this.ocultarDisfraces();
+        //window.location.reload();
+      } else {
+        alert('Ocurrió un error al buscar el disfraz');
+      }
+    }
+  });
+}
+
+ocultarDisfraces() {
+  this.disfraces = [];
+  this.mostrarDisfraces = false; // Ocultar los disfraces
+}
+
+
 
 // Método centralizado para manejar errores
 private handleError(error: HttpErrorResponse) {
