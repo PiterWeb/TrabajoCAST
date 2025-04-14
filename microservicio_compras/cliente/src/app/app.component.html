@@ -1,14 +1,16 @@
 <header>
-  <h1>Tienda de compras</h1>
+  <h1>Tienda de Disfraces</h1>
   <svg id="svg-cabecera" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-venetian-mask"><path d="M18 11c-1.5 0-2.5.5-3 2"/><path d="M4 6a2 2 0 0 0-2 2v4a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5V8a2 2 0 0 0-2-2h-3a8 8 0 0 0-5 2 8 8 0 0 0-5-2z"/><path d="M6 11c1.5 0 2.5.5 3 2"/></svg>
-  <h2>​Administrador</h2>
+  <h2>Compras</h2>
 </header>
-<input [(ngModel)]="idUsuario" id="newId">
+<input placeholder="ID usuario" [(ngModel)]="idUsuario" id="newId">
 
 
 <!-- Botones para mostrar y ocultar disfraces -->
  <br>
 <button (click)="getDisfraces()">Mostrar artículos</button>
+<button *ngIf="disfraces.length > 0" (click)="ocultarDisfraces()">Ocultar artículos</button>
+
 
 
 <!-- Mostrar la lista de disfraces solo si 'mostrarDisfraces' es true -->
@@ -25,7 +27,6 @@
     <button type="submit">Buscar Disfraz</button>
   </form>
   <br>
-  <br>
   <li *ngFor="let disfraz of disfraces">
     <h3 id="nombre">{{ disfraz.nombre }}</h3>
     <strong>Tipo:</strong> {{ disfraz.tipo }} <br>
@@ -34,16 +35,13 @@
     <strong>Precio:</strong> {{ disfraz.precio }}€<br>
     <strong>ID:</strong> {{ disfraz._id }} <br>
   </li>
-  <br>
-  <button (click)="ocultarDisfraces()">Ocultar artículos</button>
 </ul>
 
 <!-- Mostrar la lista de compras con todos los campos -->
 
-<button *ngIf="compras.length > 0" (click)="ocultarCompras()">Ocultar compras</button>
 <br>
-<input [(ngModel)]="id" id="newId">
-<button (click)="getComprasPorIdCliente(id())">Filtrar por ID</button>
+<input placeholder="ID artículo" [(ngModel)]="id" id="newId">
+<button (click)="getComprasPorIdCliente(id())">Filtrar por ID de artículo</button>
 
 
 
@@ -69,6 +67,7 @@
 
 <!-- Mostrar la lista de compras -->
 <button (click)="getCompras()">Mostrar compras</button>
+<button *ngIf="compras.length > 0" (click)="ocultarCompras()">Ocultar compras</button>
 <ul>
   <li *ngFor="let compra of compras">
     <h3 id="nombre">
@@ -94,7 +93,5 @@
     <button (click)="editCompra(compra)">Editar</button>
     <button (click)="deleteCompraPorId(compra._id)">Eliminar</button>
   </li>
-  <br>
-  <button *ngIf="compras.length > 0" (click)="ocultarCompras()">Ocultar compras</button>
 </ul>
 
