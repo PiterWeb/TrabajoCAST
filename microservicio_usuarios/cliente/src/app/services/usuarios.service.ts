@@ -16,27 +16,19 @@ export class UsuariosService {
   }
 
   // Obtener un usuario por ID o nombre
-  getUsuarioPorIdORol(id: string, idUsuario:string): Observable<any[]> {
+  getUsuarioPorRol(id: string, idUsuario:string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`);
   }
 
-  // Agregar un nuevo usuario
-  addUsuario(usuario: any, idUsuario: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}?idUsuario=${idUsuario}`, usuario);
+   // Agregar un nuevo usuario
+   addUsuario(usuario: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, usuario);
   }
-
-
-  // Actualizar un usuario por ID
  
 
-  // Eliminar un usuario por ID
-  deleteUsuario(id: string, idUsuario: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`);
-  }
-
-  isAdmin(idUsuario: string){
-    //esto llamaria a la coleccion usuarios comprobar si el id es admin
-    return true;
+   // Eliminar un usuario por ID
+   deleteUsuario(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }
 

@@ -9,39 +9,37 @@
 
 <button *ngIf="usuarios.length > 0" (click)="ocultarUsuarios()">Ocultar Usuarios</button>
 <br>
-<input [(ngModel)]="id" id="newId">
-<button (click)="getUsuarioPorIdORol(id())">Filtrar por ID</button>
-<br>
+<!-- Filtrar por rol -->
 <select [(ngModel)]="roll" name="rol" required>
   <option value="">Selecciona el tipo de usuario</option>
   <option value="Cliente">Cliente</option>
   <option value="Administrador">Administrador</option>
 
 </select>
-<button (click)="getUsuarioPorIdORol(roll())">Filtrar por rol</button>
+<button (click)="getUsuarioPorRol(roll())">Filtrar por rol</button>
 
 
-<!-- Formulario para agregar/editar un disfraz -->
-<form (ngSubmit)="addOrUpdateUsuario()">
+<!-- Formulario para agregar un usuario -->
+<form (ngSubmit)="addUsuario()">
   <select [(ngModel)]="rol" name="rol" required>
     <option value="">Selecciona el tipo de usuario</option>
     <option value="Cliente">Cliente</option>
     <option value="Administrador">Administrador</option>
     
   </select>
-  <button type="submit">{{ isEditMode ? 'Actualizar Disfraz' : 'Agregar Disfraz' }}</button>
-  <button type="reset" *ngIf="isEditMode" (click)="toogleEditMode()">Cancelar</button>
+  <button type="submit">Darse de alta</button>
 </form>
+
+<!-- Eliminar usuario -->
+<input [(ngModel)]="idDelete" id="newId">
+<button (click)="deleteUsuarioPorId(idDelete)">Darse de baja</button>
 
 <!-- Mostrar la lista de disfraces -->
 <ul>
   <li *ngFor="let usuario of usuarios">
     
     <strong>Rol:</strong> {{ usuario.rol }} <br>
-    
-    
     <strong>ID:</strong> {{ usuario._id }} <br>
-    <button (click)="deleteUsuarioPorId(usuario._id)">Eliminar</button>
   </li>
 </ul>
 

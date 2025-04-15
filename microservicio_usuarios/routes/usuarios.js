@@ -4,10 +4,10 @@ const Usuario = require("../models/Usuario");
 const mongoose = require("mongoose")
 const isAdminMiddleware = require("../isAdmin")
 
-router.use(isAdminMiddleware)
+//router.use(isAdminMiddleware)
 
 // 📌 Obtener todos los usuarios
-router.get("/", async (req, res) => {
+router.get("/", isAdminMiddleware, async (req, res) => {
   try {
     const usuarios = await Usuario.find();
     res.json(usuarios);
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 });
 
 // 📌 Obtener un usario por ID o rol
-router.get("/:param", async (req, res) => {
+router.get("/:param", isAdminMiddleware, async (req, res) => {
   const param = req.params.param;
 
   // Verifica si el parámetro es un ObjectId válido

@@ -17,26 +17,11 @@ export class AppComponent {
   id = signal('');
   roll = signal('');
   idUsuario = signal('');
-  // Variables para el formulario de agregar/editar
-  tipo: string = '';
-  nombre: string = '';
-  marca: string = '';
-  cantidad: number = 1;
-  precio: number = 0;
   rol: string = '';
-  isEditMode: boolean = false;
-  selectedUsuarioId: string = '';
+  idDelete: string = '';
 
   constructor(private usuariosService: UsuariosService) {}
 
-
-  toogleEditMode() {
-    this.isEditMode = !this.isEditMode;
-    if (!this.isEditMode) {
-      this.resetForm();
-      this.selectedUsuarioId = "";
-    }
-  }
 
   getUsuarios() {    
     this.usuariosService.getUsuarios(this.idUsuario()).subscribe({
@@ -53,8 +38,8 @@ export class AppComponent {
     this.usuarios = [];
   }
 
-  getUsuarioPorIdORol(id: string) {    
-    this.usuariosService.getUsuarioPorIdORol(id, this.idUsuario()).subscribe({
+  getUsuarioPorRol(id: string) {    
+    this.usuariosService.getUsuarioPorRol(id, this.idUsuario()).subscribe({
       next: (data) => {
         this.usuarios = data?.length > 0 ? data : [data];
       },
@@ -64,13 +49,16 @@ export class AppComponent {
     });
   }
 
-  addOrUpdateUsuario() {    
+  addUsuario() {    
     if (this.rol) {
       const newUsuario = { rol: this.rol };
 
-      this.usuariosService.addUsuario(newUsuario, this.idUsuario()).subscribe({
-        next: () => {
-          this.getUsuarios();
+      this.usuariosService.addUsuario(newUsuario).subscribe({
+        next: (response) => {
+          const newUserId = response._id; 
+          
+          // Mostrar el ID por pantalla (puedes usar un alert, console.log, o mostrarlo en la UI)
+          alert(`Usuario creado con ID: ${newUserId}`);
           this.resetForm();
         },
         error: (error: HttpErrorResponse) => {
@@ -82,15 +70,11 @@ export class AppComponent {
     }
   }
 
-  editDisfraz(usuario: any) {
-    this.rol = usuario.rol;
-    this.isEditMode = true;
-  }
-
   deleteUsuarioPorId(id: string) {    
-    this.usuariosService.deleteUsuario(id, this.idUsuario()).subscribe({
+    this.usuariosService.deleteUsuario(id).subscribe({
       next: () => {
-        this.getUsuarios();
+        alert(`Usuario eliminado correctamente`);
+        this.resetForm();
       },
       error: (error: HttpErrorResponse) => {
         this.handleError(error);
@@ -100,14 +84,9 @@ export class AppComponent {
 
   resetForm() {
     this.rol = '';
-    this.isEditMode = false;
-    this.selectedUsuarioId = '';
+    this.idDelete = '';
   }
 
-  isAdmin(idUsuario: string) {
-    console.log(this.usuariosService.isAdmin(idUsuario));
-    return this.usuariosService.isAdmin(idUsuario);
-  }
 
   // Método centralizado para manejar errores
   private handleError(error: HttpErrorResponse) {
@@ -118,7 +97,7 @@ export class AppComponent {
     } else {
       this.resetForm();
       console.error('Error:', error);
-      alert('Ocurrió un error inesperado');
+      alert('Id inválido');
       this.ocultarUsuarios();
     }
   }
