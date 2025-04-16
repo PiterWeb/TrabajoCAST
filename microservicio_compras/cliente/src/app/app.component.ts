@@ -85,6 +85,13 @@ export class AppComponent {
           this.getCompras();
           },
           error: (error: HttpErrorResponse) => {
+            if (error.status === 400) {
+              this.resetForm();
+              console.log(error)
+              alert(error.error.error);
+              this.ocultarCompras();
+              return
+            } 
             this.handleError(error);
           }
         });
