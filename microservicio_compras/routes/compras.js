@@ -123,7 +123,19 @@ router.get("/:param", async (req, res) => {
 // 📌 Crear una nueva compra
 router.post("/", async (req, res) => {
   const { id_cliente, nombre, id_articulo, cantidad, direccion } = req.body;
+
   try {
+
+    const idUsuario = req.query.idUsuario
+
+    if (idUsuario !== id_cliente) return res.status(401).json({error: "No puedes comprar con distinto ID"})
+
+    const disfraz = await Disfraz.findById(id_articulo)
+
+    if (!disfraz) return res.status(404).json({error: "No existe el articulo a comprar"})
+
+    if (disfraz.cantidad < cantidad) return res.status(400).json({error: "La cantidad excede la del producto"});
+
     const nuevaCompra = new Compras({
       id_cliente,
       nombre,
@@ -133,6 +145,9 @@ router.post("/", async (req, res) => {
     });
 
     await nuevaCompra.save();
+
+    await disfraz.updateOne({cantidad: disfraz.cantidad - cantidad}).exec()
+
     res.status(201).json(nuevaCompra);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -142,7 +157,9 @@ router.post("/", async (req, res) => {
 // 📌 Actualizar una compra por ID
 router.put("/:id", async (req, res) => {
   try {
-    const compraActualizada = await Compras.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const {nombre, direccion} = req.body
+
+    const compraActualizada = await Compras.findByIdAndUpdate(req.params.id, {nombre, direccion}, { new: true });
     if (!compraActualizada) return res.status(404).json({ mensaje: "Compra no encontrada" });
     res.json(compraActualizada);
   } catch (err) {
@@ -153,6 +170,13 @@ router.put("/:id", async (req, res) => {
 // 📌 Eliminar una compra por ID
 router.delete("/:id", async (req, res) => {
   try {
+
+    const compra = await Compras.findById(req.params.id)
+
+    const disfraz = await Disfraz.findById(compra.id_articulo)
+
+    await disfraz.updateOne({cantidad: disfraz.cantidad + compra.cantidad}).exec()
+
     const compraEliminada = await Compras.findByIdAndDelete(req.params.id);
     if (!compraEliminada) return res.status(404).json({ mensaje: "Compra no encontrada"});
     res.json({ mensaje: "Compra eliminada" });
