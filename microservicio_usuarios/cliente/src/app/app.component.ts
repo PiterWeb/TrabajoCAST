@@ -70,7 +70,17 @@ export class AppComponent {
     }
   }
 
-  deleteUsuarioPorId(id: string) {    
+  deleteUsuarioPorId(id: string) {
+    if (!this.idUsuario()) {
+      alert('Debe ingresar su ID en la primera caja para eliminar su usuario');
+      return;
+    }
+
+    if (id !== this.idUsuario()) {
+      alert('Solo puede eliminar su propio usuario');
+      return;
+    }
+  
     this.usuariosService.deleteUsuario(id).subscribe({
       next: () => {
         alert(`Usuario eliminado correctamente`);
