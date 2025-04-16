@@ -21,14 +21,14 @@ export class UsuariosService {
   }
 
    // Agregar un nuevo usuario
-   addUsuario(usuario: any): Observable<any> {
+  addUsuario(usuario: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, usuario);
   }
  
 
    // Eliminar un usuario por ID
-   deleteUsuario(id: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+   deleteUsuario(id: string, idUsuario:string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}?idUsuario=${idUsuario}`);
   }
 }
 

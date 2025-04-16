@@ -59,19 +59,23 @@ router.post("/", async (req, res) => {
 });
 
 // 📌 Actualizar un usuario por ID
-router.put("/:id", async (req, res) => {
-  try {
-    const usuarioActualizado = await Usuario.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!usuarioActualizado) return res.status(404).json({ mensaje: "Usuario no encontrado" });
-    res.json(usuarioActualizado);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// router.put("/:id", async (req, res) => {
+//   try {
+//     const usuarioActualizado = await Usuario.findByIdAndUpdate(req.params.id, req.body, { new: true });
+//     if (!usuarioActualizado) return res.status(404).json({ mensaje: "Usuario no encontrado" });
+//     res.json(usuarioActualizado);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
 // 📌 Eliminar un usuario por ID
 router.delete("/:id", async (req, res) => {
   try {
+    const idUsuario = req.query.idUsuario
+
+    if (idUsuario !== req.params.id) return res.status(401).json({ error: "No puedes eliminar un usuario distinto del tuyo"})
+
     const usuarioEliminado = await Usuario.findByIdAndDelete(req.params.id);
     if (!usuarioEliminado) return res.status(404).json({ mensaje: "Usuario no encontrado" });
     res.json({ mensaje: "Disfraz eliminado" });

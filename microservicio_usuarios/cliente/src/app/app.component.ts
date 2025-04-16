@@ -81,7 +81,7 @@ export class AppComponent {
       return;
     }
   
-    this.usuariosService.deleteUsuario(id).subscribe({
+    this.usuariosService.deleteUsuario(id, this.idUsuario()).subscribe({
       next: () => {
         alert(`Usuario eliminado correctamente`);
         this.resetForm();
@@ -102,7 +102,7 @@ export class AppComponent {
   private handleError(error: HttpErrorResponse) {
     if (error.status === 401) {
       this.resetForm();
-      alert('No tiene permisos de administrador para realizar esta acción');
+      alert('No tiene permisos para realizar esta acción');
       this.ocultarUsuarios();
     } else {
       this.resetForm();
