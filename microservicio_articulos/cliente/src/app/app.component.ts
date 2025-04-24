@@ -16,10 +16,7 @@ export class AppComponent {
   title = 'cliente';
   id = signal('');
   // Variables para el formulario de agregar/editar
-  idUsuarioGet: string = '';
-  idUsuarioUpdate: string = '';
-  idUsuarioDelete: string = '';
-  idUsuarioSearch: string = '';
+  idUsuario = signal('');
   tipo: string = '';
   nombre: string = '';
   marca: string = '';
@@ -39,7 +36,7 @@ export class AppComponent {
   }
 
   getDisfraces() {
-    this.disfracesService.getDisfraces(this.idUsuarioGet)
+    this.disfracesService.getDisfraces(this.idUsuario())
     .subscribe({
       next: (data) => {
         this.disfraces = data;
@@ -62,7 +59,7 @@ export class AppComponent {
   }
 
   getDisfrazPorIdONombre(id: string) {
-    this.disfracesService.getDisfrazPorIdONombre(id, this.idUsuarioSearch)
+    this.disfracesService.getDisfrazPorIdONombre(id, this.idUsuario())
     .subscribe({
       next: (data) => {
         if (data?.length === 0) this.disfraces = [];
@@ -92,8 +89,8 @@ export class AppComponent {
       };
 
       const observable = this.isEditMode 
-        ? this.disfracesService.updateDisfraz(this.selectedDisfrazId, newDisfraz, this.idUsuarioUpdate)
-        : this.disfracesService.addDisfraz(newDisfraz, this.idUsuarioUpdate);
+        ? this.disfracesService.updateDisfraz(this.selectedDisfrazId, newDisfraz, this.idUsuario())
+        : this.disfracesService.addDisfraz(newDisfraz, this.idUsuario());
 
       observable.subscribe({
         next: () => {
@@ -125,7 +122,7 @@ export class AppComponent {
   }
 
   deleteDisfrazPorId(id: string) {
-    this.disfracesService.deleteDisfraz(id, this.idUsuarioDelete)
+    this.disfracesService.deleteDisfraz(id, this.idUsuario())
     .subscribe({
       next: () => {
         this.getDisfraces();
@@ -144,10 +141,6 @@ export class AppComponent {
   }
 
   resetForm() {
-    this.idUsuarioGet = '';
-    this.idUsuarioUpdate = '';
-    this.idUsuarioSearch = '';
-    this.idUsuarioDelete = '';
     this.tipo = '';
     this.nombre = '';
     this.marca = '';

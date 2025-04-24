@@ -7,7 +7,7 @@
 
 <!-- Mostrar la lista de disfraces con todos los campos -->
 <form (ngSubmit)="getDisfraces()">
-  <input type="text" [(ngModel)]="idUsuarioGet" name="idUsuarioGet" placeholder="ID de usuario" required />
+  <input type="text" [(ngModel)]="idUsuario" name="idUsuario" placeholder="ID de usuario" required />
 
   <button type="submit">Mostrar disfraces</button>
 </form>
@@ -22,14 +22,14 @@
          name="searchTerm"
          placeholder="ID o Nombre del disfraz" 
          required />
-  <input type="text" [(ngModel)]="idUsuarioSearch" name="idUsuarioSearch" placeholder="ID de usuario" required />
+  <input type="text" [(ngModel)]="idUsuario" name="idUsuario" placeholder="ID de usuario" required />
   <button type="submit">Buscar Disfraz</button>
 </form>
 
 
 <!-- Formulario para agregar/editar un disfraz -->
 <form (ngSubmit)="addOrUpdateDisfraz()">
-  <input type="text" [(ngModel)]="idUsuarioUpdate" name="idUsuarioUpdate" placeholder="ID de usuario" required />
+  <input type="text" [(ngModel)]="idUsuario" name="idUsuario" placeholder="ID de usuario" required />
 
   <select [(ngModel)]="tipo" name="tipo" required>
     <option value="">Selecciona el tipo de disfraz</option>
@@ -63,7 +63,7 @@
   <button (click)="editDisfraz(disfraz)">Editar</button><br>
     <!-- Formulario para eliminar -->
     <form (ngSubmit)="deleteDisfrazPorId(disfraz._id)" style="display: inline;">
-      <input type="text" [(ngModel)]="idUsuarioDelete" name="idUsuarioDelete" placeholder="ID de usuario" required />
+      <input type="text" [(ngModel)]="idUsuario" name="idUsuario" placeholder="ID de usuario" required />
       <button type="submit">Eliminar</button>
     </form>
   </li>
