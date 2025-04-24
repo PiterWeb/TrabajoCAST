@@ -159,7 +159,14 @@ router.put("/:id", async (req, res) => {
   try {
     const {nombre, direccion} = req.body
 
+    const idUsuario = req.query.idUsuario
+
+    const compra = await Compras.findById(req.params.id)
+
+    if (compra.id_cliente !== idUsuario) throw new Error("No coincide el id de cliente de la compra") 
+
     const compraActualizada = await Compras.findByIdAndUpdate(req.params.id, {nombre, direccion}, { new: true });
+    
     if (!compraActualizada) return res.status(404).json({ mensaje: "Compra no encontrada" });
     res.json(compraActualizada);
   } catch (err) {
@@ -171,7 +178,11 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
 
+    const idUsuario = req.query.idUsuario
+
     const compra = await Compras.findById(req.params.id)
+
+    if (compra.id_cliente !== idUsuario) throw new Error("No coincide el id de cliente de la compra") 
 
     const disfraz = await Disfraz.findById(compra.id_articulo)
 
