@@ -163,7 +163,9 @@ router.put("/:id", async (req, res) => {
 
     const compra = await Compras.findById(req.params.id)
 
-    if (compra.id_cliente !== idUsuario) throw new Error("No coincide el id de cliente de la compra") 
+    if (compra.id_cliente.toString() !== idUsuario.toString()) {
+      throw new Error("No coincide el id de cliente de la compra")
+    }
 
     const compraActualizada = await Compras.findByIdAndUpdate(req.params.id, {nombre, direccion}, { new: true });
     
@@ -182,8 +184,9 @@ router.delete("/:id", async (req, res) => {
 
     const compra = await Compras.findById(req.params.id)
 
-    if (compra.id_cliente !== idUsuario) throw new Error("No coincide el id de cliente de la compra") 
-
+  if (compra.id_cliente.toString() !== idUsuario.toString()) {
+    throw new Error("No coincide el id de cliente de la compra")
+  }
     const disfraz = await Disfraz.findById(compra.id_articulo)
 
     await disfraz.updateOne({cantidad: disfraz.cantidad + compra.cantidad}).exec()
