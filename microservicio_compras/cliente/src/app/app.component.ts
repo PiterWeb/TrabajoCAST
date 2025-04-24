@@ -20,7 +20,6 @@ export class AppComponent {
   id = signal('');
   idUsuario = signal('');
   // Variables para el formulario de agregar/editar
-  id_cliente: string = '';
   nombre: string = '';
   id_articulo: string = '';
   cantidad: number = 1;
@@ -66,8 +65,8 @@ export class AppComponent {
   }
 
   addOrUpdateCompra() {
-    if (this.id_cliente && this.nombre && this.id_articulo && this.cantidad >= 0 && this.direccion ) {
-      const newCompra = { id_cliente: this.id_cliente, nombre: this.nombre, id_articulo: this.id_articulo, cantidad: this.cantidad, direccion: this.direccion };
+    if (this.idUsuario() && this.nombre && this.id_articulo && this.cantidad >= 0 && this.direccion ) {
+      const newCompra = { id_cliente: this.idUsuario(), nombre: this.nombre, id_articulo: this.id_articulo, cantidad: this.cantidad, direccion: this.direccion };
 
       if (this.isEditMode) {
         this.ComprasService.updateCompra(this.selectedCompraId, newCompra,this.idUsuario()).subscribe({
@@ -101,7 +100,6 @@ export class AppComponent {
   }
 
   editCompra(compra: any) {
-    this.id_cliente = compra.id_cliente;
     this.nombre = compra.nombre;
     this.id_articulo = compra.id_articulo;
     this.cantidad = compra.cantidad;
@@ -121,7 +119,6 @@ export class AppComponent {
   }
 
   resetForm() {
-    this.id_cliente = '';
     this.nombre = '';
     this.id_articulo = '';
     this.cantidad = 1;
